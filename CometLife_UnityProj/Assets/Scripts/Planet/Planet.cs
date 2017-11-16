@@ -24,8 +24,8 @@ public class Planet : MonoBehaviour
 
     void Start()
     {
-        m_pullForce = 500;
-        m_radius = 400;
+        m_pullForce = 100;
+        m_radius = 8000;
     }
 
     void FixedUpdate()

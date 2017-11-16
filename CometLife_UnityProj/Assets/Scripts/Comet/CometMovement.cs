@@ -10,6 +10,9 @@ public class CometMovement : MonoBehaviour {
     Vector3 m_rotation;
     Vector3 m_force;
 
+    float m_maxVelocity = 300;
+    float m_maxVelocitySqr;
+
     public void setPlanet(Planet _planet)
     {
         m_targetPlanet = _planet;
@@ -33,6 +36,7 @@ public class CometMovement : MonoBehaviour {
     {
         m_RB = GetComponent<Rigidbody>();
         m_rotation = new Vector3(Random.Range(0.0f, 0.05f), Random.Range(0.0f, 0.05f), Random.Range(0.0f, 0.05f));
+        m_maxVelocitySqr = m_maxVelocity * m_maxVelocity;
 
         if(m_targetPlanet != null)
             m_force = Vector3.Normalize(new Vector3(m_targetPlanet.transform.position.x + Random.Range(0, m_targetPlanet.getRadius()/4),
@@ -44,5 +48,9 @@ public class CometMovement : MonoBehaviour {
     {
         m_RB.AddRelativeTorque(m_rotation);
         m_RB.AddForce(m_force);
+
+        Vector3 rb_V = m_RB.velocity; 
+        if(rb_V.sqrMagnitude > m_maxVelocitySqr)
+            m_RB.velocity = rb_V.normalized * m_maxVelocity;
 	}
 }

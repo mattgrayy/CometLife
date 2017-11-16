@@ -13,7 +13,6 @@ public class CometRandomiser : MonoBehaviour
     void Start()
     {
         m_deformingMesh = GetComponent<MeshFilter>().mesh;
-        GetComponent<MeshCollider>().sharedMesh = m_deformingMesh;
         m_currentVertices = m_deformingMesh.vertices;
 
         weldVerts();
@@ -64,6 +63,5 @@ public class CometRandomiser : MonoBehaviour
 
         m_deformingMesh.vertices = m_currentVertices;
         m_deformingMesh.RecalculateNormals();
-        GetComponent<MeshCollider>().sharedMesh = m_deformingMesh;
     }
 }
