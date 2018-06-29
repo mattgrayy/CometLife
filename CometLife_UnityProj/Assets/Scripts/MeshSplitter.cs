@@ -24,23 +24,21 @@ public class MeshSplitter : MonoBehaviour {
         if (_trianglesPerChunk == -1)
             _trianglesPerChunk = m_trianglesPerChunkFallback;
 
+        Vector3[] meshVerts = m_mesh.vertices;
         int curPoint = 0;
 
-        List<Vector3> splitVerts = new List<Vector3>();
-        List<int> splitIndices = new List<int>();
+        Vector3[] splitVerts2 = new Vector3[_trianglesPerChunk*3];
+        int[] splitIndices2 = new int[_trianglesPerChunk*3];
 
         foreach(int i in m_meshTris)
         {
+            splitVerts2[curPoint] = meshVerts[i];
+            splitIndices2[curPoint] = curPoint;
+
             curPoint++;
-
-            splitVerts.Add(m_mesh.vertices[i]);
-            splitIndices.Add(curPoint-1);
-
             if (curPoint == _trianglesPerChunk * 3)
             {
-                splitVertGroupToChild(splitVerts, splitIndices);
-                splitVerts.Clear();
-                splitIndices.Clear();
+                splitVertGroupToChild(splitVerts2, splitIndices2);
                 curPoint = 0;
             }
         }
@@ -60,26 +58,17 @@ public class MeshSplitter : MonoBehaviour {
         Destroy(this);
     }
 
-    void splitVertGroupToChild(List<Vector3> _verts, List<int> _inds)
+    void splitVertGroupToChild(Vector3[] _verts , int[] _inds)
     {
-        Vector3[] vertices = new Vector3[_verts.Count];
-        for (int i = 0; i < vertices.Length; i++)
-            vertices[i] = _verts[i];
-
-        int[] indices = new int[_inds.Count];
-        for (int i = 0; i < indices.Length; i++)
-            indices[i] = _inds[i];
-
-        // Create the mesh
         Mesh msh = new Mesh();
-        msh.vertices = vertices;
-        msh.triangles = indices;
+        msh.vertices = _verts;
+        msh.triangles = _inds;
+
         msh.RecalculateNormals();
         msh.RecalculateBounds();
 
         GameObject newChild = new GameObject("SplitChild", typeof(MeshFilter), typeof(MeshRenderer));
-        newChild.transform.position = transform.position;
-        newChild.transform.parent = transform;
+        newChild.transform.SetParent(transform, false);
         newChild.GetComponent<MeshFilter>().mesh = msh;
         newChild.GetComponent<MeshRenderer>().material = GetComponent<MeshRenderer>().material;
     }

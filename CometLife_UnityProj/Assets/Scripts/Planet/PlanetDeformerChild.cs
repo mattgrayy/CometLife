@@ -24,8 +24,20 @@ public class PlanetDeformerChild : MonoBehaviour {
 
             changed = true;
 
-            float dif = (_radius - dist) / -100;
+            float randomisedRadius = _radius + Random.Range(-_radius / 100, _radius / 100);
+
+
+            Vector3 dirToCenter = m_currentVertices[weldedList[0]].normalized;
+
+            Debug.Log(dist + " _ " + Mathf.Log(dist, 0.3f));
+            dirToCenter *= Mathf.Log(dist, 0.3f);
+
+            float dif = (randomisedRadius - dist) / -100;
             Vector3 positionToAdd = dif * m_currentVertices[weldedList[0]];
+
+
+            positionToAdd += dirToCenter;
+
 
             foreach (int vertIndex in weldedList)
             {

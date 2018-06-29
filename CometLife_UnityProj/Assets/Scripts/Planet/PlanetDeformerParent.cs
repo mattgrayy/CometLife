@@ -10,6 +10,9 @@ public class PlanetDeformerParent : MonoBehaviour
     {
         foreach(Transform child in transform)
         {
+            if (child.name != "SplitChild")
+                continue;
+
             PlanetDeformerChild deform = child.gameObject.GetComponent<PlanetDeformerChild>();
 
             if(deform == null)
@@ -24,6 +27,7 @@ public class PlanetDeformerParent : MonoBehaviour
 
     public void childHit(Vector3 _hitPos, float _radius = 0)
     {
+        _radius *= 3;// Random.Range(1.0f, 3.0f);
         foreach (PlanetDeformerChild child in deformerChilden)
         {
             child.deformMesh(_hitPos, _radius);
